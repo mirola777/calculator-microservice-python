@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    environment {
+        PYTHON_VERSION = '3.9'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clonar el repositorio
+                checkout scm
+            }
+        }
+
+        stage('Set up Python') {
+            steps {
+                // Configurar Python
+                sh """
+                sudo apt-get update
+                sudo apt-get install -y python${PYTHON_VERSION}
+                sudo apt-get install -y python3-pip
+                python${PYTHON_VERSION} -m pip install --upgrade pip
+                """
+            }
+        }
+
+        stage('Install dependencies') {
+            steps {
+                // Instalar dependencias
+                sh 'pip install -r requirements.txt'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                // Ejecutar pruebas
+                sh 'python -m unittest discover -s test'
+            }
+        }
+    }
+
+    post {
+        always {
+            // Publicar resultados de las pruebas
+            junit 'test-results/*.xml'
+        }
+    }
+}
