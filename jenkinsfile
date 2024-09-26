@@ -18,7 +18,7 @@ pipeline {
         stage('Set up Python') {
             steps {
                 // Configurar Python y crear un entorno virtual
-                sh 'bash -c "python -m venv $VENV_PATH"'
+                bat 'bash -c "python -m venv $VENV_PATH"'
                 bat """
                 python -m venv ${VENV_PATH}
                 """
