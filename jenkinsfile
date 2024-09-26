@@ -13,6 +13,11 @@ pipeline {
      //        //   checkout scm
      //       }
      //   }
+      stage('Clone Repository') {
+            steps {
+                git 'https://github.com/mirola777/calculator-microservice-python.git'
+            }
+        }
 
         stage('Set up Python') {
             steps {
