@@ -2,43 +2,57 @@ pipeline {
     agent any
 
     environment {
-        VENV_PATH = 'calculator'
-        FLASK_APP = 'calculator.py'
+        PYTHON_VERSION = '3.9'
+        VENV_PATH = 'venv'
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Clonar el repositorio
                 checkout scm
             }
         }
 
-        stage('Setup Virtual Environment') {
+        stage('Set up Python') {
             steps {
-                script {
-                    sh 'bash -c "python -m venv $VENV_PATH"'
-                    sh 'bash -c "source $VENV_PATH/bin/activate"'
-                }
-            }
-        }
-         stage('Install dependencies') {
-            steps {
-                sh 'bash -c "source $VENV_PATH/bin/activate && 
-                pip install -r requirements.txt"'
+                // Configurar Python y crear un entorno virtual
+                sh """
+                sudo apt-get update
+                sudo apt-get install -y python${PYTHON_VERSION}
+                sudo apt-get install -y python3-pip
+                python${PYTHON_VERSION} -m pip install --upgrade pip
+                python${PYTHON_VERSION} -m venv ${VENV_PATH}
+                """
             }
         }
 
-        stage('Test') {
+        stage('Install dependencies') {
             steps {
-                echo "Assuming tests are run here. Please replace this with actual test commands."
-                sh "source $VENV_PATH/bin/activate && python -m unittest discover -s test"
+                // Instalar dependencias
+                sh """
+                source ${VENV_PATH}/bin/activate
+                pip install -r requirements.txt
+                """
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                // Ejecutar pruebas
+                sh """
+                source ${VENV_PATH}/bin/activate
+                python -m unittest discover -s test
+                """
             }
         }
 
         stage('Deploy') {
             steps {
                 script {
+                    // Desplegar tu aplicación Flask
                     echo 'Deploying application...'
+                    // Ejemplo: sh 'scp -r . user@your_server:/path/to/deploy'
                 }
             }
         }
@@ -46,9 +60,9 @@ pipeline {
 
     post {
         always {
-            // Clean up after the pipeline runs
+            // Limpiar después de que el pipeline se ejecute
             echo 'Cleaning up...'
-            sh 'rm -rf ${VIRTUAL_ENV_DIR}'
+            sh 'rm -rf ${VENV_PATH}'
         }
     }
 }
