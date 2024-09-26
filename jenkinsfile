@@ -59,12 +59,5 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            // Limpiar después de que el pipeline se ejecute
-            echo 'Cleaning up...'
-            bat 'rmdir /S /Q ${VENV_PATH}'
-        }
-    }
+ 
 }
