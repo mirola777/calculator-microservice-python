@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - python -m pip install --upgrade pip
+      - pip install -r requirements.txt
+
+  build:
+    commands:
+      - mkdir -p test-results
+      - pytest --junitxml=test-results/results.xml --html=test-results/report.html
+
+artifacts:
+  files:
+    - test-results/*
+  discard-paths: yes
+
+reports:
+  pytest-report:
+    files:
+      - "test-results/results.xml"
+    file-format: "JUNITXML"
