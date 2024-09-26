@@ -15,7 +15,7 @@ pipeline {
      //   }
       stage('Clone Repository') {
             steps {
-                git 'https://github.com/mirola777/calculator-microservice-python.git'
+               checkout scm
             }
         }
 
