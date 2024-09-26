@@ -4,7 +4,7 @@ pipeline {
     environment {
         PYTHON_VERSION = '3.9'
         VENV_PATH = 'venv'
-        PYTHON_PATH = "C:\Users\User\AppData\Local\Programs\Python\Python310\python.exe"
+        PYTHON_PATH = "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python310\\python.exe"
     }
 
     stages {
