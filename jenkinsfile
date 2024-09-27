@@ -27,6 +27,23 @@ pipeline {
             }
         }
 
+          stage('Static Code Analysis') {
+            steps {
+                // Run pylint and generate report
+                sh """
+                . ${env.WORKSPACE}/venv/bin/activate
+                pylint --output-format=parseable . > pylint_report.txt || true
+                """
+            }
+            post {
+                always {
+                    // Publish pylint report
+                    recordIssues tools: [pylint(pattern: 'pylint_report.txt')]
+                }
+            }
+        }
+
+
         stage('Run tests') {
             steps {
                 // Run tests
