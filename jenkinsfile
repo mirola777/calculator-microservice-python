@@ -20,7 +20,7 @@ pipeline {
             steps {
                 // Install dependencies
                 sh """
-                source ${env.WORKSPACE}/venv/bin/activate
+                . ${env.WORKSPACE}/venv/bin/activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
                 """
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 // Run tests
                 sh """
-                source ${env.WORKSPACE}/venv/bin/activate
+                . ${env.WORKSPACE}/venv/bin/activate
                 python -m unittest discover -s test
                 """
             }
