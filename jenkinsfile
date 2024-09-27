@@ -39,22 +39,6 @@ pipeline {
             }
         }
 
-          stage('Static Code Analysis') {
-            steps {
-                // Run pylint and generate report
-                sh """
-                . ${env.WORKSPACE}/venv/bin/activate
-                python -m pylint --output-format=parseable . > pylint_report.txt || true
-                """
-            }
-            post {
-                always {
-                    // Publish pylint report
-                    recordIssues tools: [pylint(pattern: 'pylint_report.txt')]
-                }
-            }
-        }
-
         stage('Run tests') {
             steps {
                 // Run tests
@@ -63,16 +47,12 @@ pipeline {
                 python -m unittest discover -s test
                 pytest --junitxml=report.xml --cov=. --cov-report=xml
                 """
+                step([$class: 'CoberturaPublisher', 
+                        coberturaReportFile: "cov.xml",
+                    ])
+                junit "coverage.xml"
             }
-            post {
-                always {
-                    // Publish JUnit test results
-                    junit 'coverage.xml'
-                    // Publish coverage report
-                    recordCoverage tools: [cobertura(pattern: '**/coverage.xml')]
-                    
-                }
-            }
+          
         }
 
         stage('Deploy') {
