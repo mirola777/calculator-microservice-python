@@ -1,13 +1,14 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.8'
-            args '-u root' // Run as root to install dependencies
-        }
-    }
+    agent any
 
     stages {
         stage('Setup Python Environment') {
+            agent {
+                docker {
+                    image 'python:3.8'
+                    args '-u root' // Run as root to install dependencies
+                }
+            }
             steps {
                 // Setup Python virtual environment
                 sh """
@@ -17,6 +18,12 @@ pipeline {
         }
 
         stage('Install dependencies') {
+            agent {
+                docker {
+                    image 'python:3.8'
+                    args '-u root' // Run as root to install dependencies
+                }
+            }
             steps {
                 // Install dependencies
                 sh """
@@ -28,6 +35,12 @@ pipeline {
         }
 
         stage('Run tests') {
+            agent {
+                docker {
+                    image 'python:3.8'
+                    args '-u root' // Run as root to install dependencies
+                }
+            }
             steps {
                 // Run tests
                 sh """
