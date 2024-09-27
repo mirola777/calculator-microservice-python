@@ -32,7 +32,7 @@ pipeline {
                 // Run pylint and generate report
                 sh """
                 . ${env.WORKSPACE}/venv/bin/activate
-                pylint --output-format=parseable . > pylint_report.txt || true
+                python -m pylint --output-format=parseable . > pylint_report.txt || true
                 """
             }
             post {
