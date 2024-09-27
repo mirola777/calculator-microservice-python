@@ -48,7 +48,7 @@ pipeline {
                 pytest --junitxml=report.xml --cov=. --cov-report=xml
                 """
                 step([$class: 'CoberturaPublisher', 
-                        coberturaReportFile: "cov.xml",
+                        coberturaReportFile: "report.xml",
                     ])
                 junit "coverage.xml"
             }
