@@ -33,12 +33,15 @@ pipeline {
                 sh """
                 . ${env.WORKSPACE}/venv/bin/activate
                 python -m unittest discover -s test
+                pytest --junitxml=report.xml --cov=. --cov-report=xml
                 """
             }
             post {
                 always {
                     // Publish JUnit test results
                     junit 'report.xml'
+                    // Publish coverage report
+                    publishCoverage adapters: [coberturaAdapter('coverage.xml')]
                 }
             }
         }
