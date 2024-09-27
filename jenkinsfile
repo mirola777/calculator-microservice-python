@@ -41,7 +41,8 @@ pipeline {
                     // Publish JUnit test results
                     junit 'report.xml'
                     // Publish coverage report
-                    publishCoverage adapters: [coberturaAdapter('coverage.xml')]
+                    recordCoverage tools: [cobertura(pattern: 'coverage.xml')]
+                    
                 }
             }
         }
