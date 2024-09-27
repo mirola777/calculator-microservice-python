@@ -41,7 +41,7 @@ pipeline {
                     // Publish JUnit test results
                     junit 'coverage.xml'
                     // Publish coverage report
-                    recordCoverage( enabled: true, reportDir: 'coverage.xml', sourceFileResolver: pythonSourceFiles())
+                    recordCoverage adapters: [cobertura()]
                     
                 }
             }
