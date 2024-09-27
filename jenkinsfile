@@ -41,7 +41,7 @@ pipeline {
                     // Publish JUnit test results
                     junit 'coverage.xml'
                     // Publish coverage report
-                    recordCoverage(tools: [[parser: 'COBERTURA', pattern: '**/coverage.xml']])
+                    recordCoverage tools: [cobertura(pattern: '**/coverage.xml')]
                     
                 }
             }
