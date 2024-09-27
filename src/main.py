@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from src.calculator import Calculator
+from calculator import Calculator
 
 app = Flask(__name__)
 
