@@ -35,6 +35,12 @@ pipeline {
                 python -m unittest discover -s test
                 """
             }
+            post {
+                always {
+                    // Publish JUnit test results
+                    junit 'report.xml'
+                }
+            }
         }
 
         stage('Deploy') {
