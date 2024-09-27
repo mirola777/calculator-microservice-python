@@ -1,6 +1,6 @@
 import unittest
 
-from main import app
+from src.main import app
 
 
 class TestHttpRequest(unittest.TestCase):
