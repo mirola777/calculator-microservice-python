@@ -50,7 +50,7 @@ pipeline {
                 step([$class: 'CoberturaPublisher', 
                         coberturaReportFile: "report.xml",
                     ])
-                junit "coverage.xml"
+                junit "report.xml"
             }
           
         }
