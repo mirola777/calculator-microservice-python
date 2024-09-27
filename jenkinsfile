@@ -41,18 +41,20 @@ pipeline {
 
         stage('Run tests') {
             steps {
-                // Run tests
+                // Run tests and generate coverage report
                 sh """
                 . ${env.WORKSPACE}/venv/bin/activate
-                python -m unittest discover -s test
-                pytest --junitxml=report.xml --cov=. --cov-report=xml
+                pytest --junitxml=${env.WORKSPACE}/report.xml --cov=. --cov-report=xml:${env.WORKSPACE}/coverage.xml --cov-report=html
                 """
-                step([$class: 'CoberturaPublisher', 
-                        coberturaReportFile: "report.xml",
-                    ])
-                junit "report.xml"
             }
-          
+            post {
+                always {
+                    // Publish JUnit test results
+                    junit '**/report.xml'
+                    // Publish coverage report
+                    cobertura coberturaReportFile: '**/coverage.xml'
+                }
+            }
         }
 
         stage('Deploy') {
