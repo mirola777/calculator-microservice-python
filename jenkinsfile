@@ -39,7 +39,7 @@ pipeline {
             post {
                 always {
                     // Publish JUnit test results
-                    xunit 'report.xml'
+                    junit 'coverage.xml'
                     // Publish coverage report
                    // recordCoverage tools: [cobertura(pattern: 'coverage.xml')]
                     
