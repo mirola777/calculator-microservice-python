@@ -5,4 +5,4 @@ class Calculator:
 
     @staticmethod
     def cubo(numero):
-        return numero + numero * numero
+        return numero * numero * numero
