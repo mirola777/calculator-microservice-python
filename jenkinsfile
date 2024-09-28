@@ -23,6 +23,20 @@ pipeline {
                 """
             }
         }
+        stage('Run tests') {
+            steps {
+                sh """
+                . ${env.WORKSPACE}/venv/bin/activate
+                pytest --junitxml=${env.WORKSPACE}/report.xml --cov=. --cov-report=xml:${env.WORKSPACE}/coverage.xml --cov-report=html
+                """
+            }
+            post {
+                always {
+                    junit '**/report.xml'
+                    cobertura coberturaReportFile: '**/coverage.xml'
+                }
+            }
+        }
         stage('Static Code Checking') {
             steps {
                 script {
@@ -37,20 +51,6 @@ pipeline {
                     recordIssues(
                         tool: pyLint(pattern: 'pylint.log')
                     )
-                }
-            }
-        }
-        stage('Run tests') {
-            steps {
-                sh """
-                . ${env.WORKSPACE}/venv/bin/activate
-                pytest --junitxml=${env.WORKSPACE}/report.xml --cov=. --cov-report=xml:${env.WORKSPACE}/coverage.xml --cov-report=html
-                """
-            }
-            post {
-                always {
-                    junit '**/report.xml'
-                    cobertura coberturaReportFile: '**/coverage.xml'
                 }
             }
         }
