@@ -39,12 +39,10 @@ pipeline {
         }
         stage('Static Code Checking') {
             steps {
-                script {
-                    sh """
-                    . ${env.WORKSPACE}/venv/bin/activate
-                    find src -name '*.py' | xargs pylint -f parseable | tee pylint.log
-                    """
-                }
+                sh """
+                . ${env.WORKSPACE}/venv/bin/activate
+                find src -name '*.py' | xargs pylint -f parseable | tee pylint.log
+                """
             }
             post {
                 always {
