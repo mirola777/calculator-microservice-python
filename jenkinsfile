@@ -30,12 +30,12 @@ pipeline {
                 pytest --junitxml=${env.WORKSPACE}/report.xml --cov=. --cov-report=xml:${env.WORKSPACE}/coverage.xml --cov-report=html
                 """
             }
-            post {
-                always {
-                    junit '**/report.xml'
-                    cobertura coberturaReportFile: '**/coverage.xml'
-                }
-            }
+            //post {
+            //    always {
+            //        junit '**/report.xml'
+            //        cobertura coberturaReportFile: '**/coverage.xml'
+            //    }
+            //}
         }
         stage('Code analysis') {
             steps {
@@ -50,6 +50,12 @@ pipeline {
                         tool: pyLint(pattern: 'pylint.log')
                     )
                 }
+            }
+        }
+        stage('Coverage report') {
+            steps {
+                junit '**/report.xml'
+                cobertura coberturaReportFile: '**/coverage.xml'
             }
         }
     }
