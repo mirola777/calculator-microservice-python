@@ -37,7 +37,7 @@ pipeline {
                 }
             }
         }
-        stage('Static Code Checking') {
+        stage('Code analysis') {
             steps {
                 sh """
                 . ${env.WORKSPACE}/venv/bin/activate
