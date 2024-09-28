@@ -2,23 +2,20 @@ pipeline {
     agent {
         docker {
             image 'python:3.8'
-            args '-u root' // Run as root to install dependencies
+            args '-u root'
         }
     }
 
     stages {
-        stage('Setup Python Environment') {
+        stage('Setup Python') {
             steps {
-                // Setup Python virtual environment
                 sh """
                 python -m venv ${env.WORKSPACE}/venv
                 """
             }
         }
-
-        stage('Install dependencies') {
+        stage('Install requirements') {
             steps {
-                // Install dependencies
                 sh """
                 . ${env.WORKSPACE}/venv/bin/activate
                 pip install --upgrade pip
@@ -26,14 +23,17 @@ pipeline {
                 """
             }
         }
-  stage('Static Code Checking') {
+        stage('Static Code Checking') {
             steps {
                 script {
-                    // Run pylint and generate report
                     sh """
                     . ${env.WORKSPACE}/venv/bin/activate
                     find src -name '*.py' | xargs pylint -f parseable | tee pylint.log
                     """
+                }
+            }
+            post {
+                always {
                     recordIssues(
                         tool: pyLint(pattern: 'pylint.log'),
                         failTotalHigh: 10,
@@ -41,11 +41,8 @@ pipeline {
                 }
             }
         }
-
-
         stage('Run tests') {
             steps {
-                // Run tests and generate coverage report
                 sh """
                 . ${env.WORKSPACE}/venv/bin/activate
                 pytest --junitxml=${env.WORKSPACE}/report.xml --cov=. --cov-report=xml:${env.WORKSPACE}/coverage.xml --cov-report=html
@@ -53,20 +50,9 @@ pipeline {
             }
             post {
                 always {
-                    // Publish JUnit test results
                     junit '**/report.xml'
-                    // Publish coverage report
                     cobertura coberturaReportFile: '**/coverage.xml'
                 }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                // Add your deployment steps here
-                sh """
-                echo "Deploying application..."
-                """
             }
         }
     }
